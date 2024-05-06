@@ -3,10 +3,12 @@ const { existsSync, mkdirSync } = require('fs');
 const pastebinPage = require('../../pageObject/pages/paste-bin.js');
 const form = require('../../pageObject/components/formcomponent.js');
 const dropMenu = require('../../pageObject/components/dropmenu.js');
+const titlePage = require('../../pageObject/components/title.js');
 
 const binPage = new pastebinPage();
 const formPage = new form();
 const dropMenuPage = new dropMenu();
+const titleMenu = new titlePage();
 
 describe('add paste bin stick', () => {
 
@@ -51,7 +53,7 @@ describe('add paste bin stick', () => {
         await saveScreenShot('./screenshots/','newPage.png');
 
         const pageTitle = 'Hello from WebDriver';
-        const title = await $('title');
+        const title = await titleMenu.rootEl;
 
         console.log(title);
 
