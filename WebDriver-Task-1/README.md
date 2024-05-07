@@ -76,5 +76,7 @@ And after saving the element
 [completeTest]: ../images/WebDriver-Task-1/CompleteTest.png
 [webserver]: ../images/WebDriver-Task-1/ReportFile.png
 [reportTest]: ../images/WebDriver-Task-1/ReportResult.png
+[savetext]: ../images/WebDriver-Task-1/savetext.png
+[savetitle]: ../images/WebDriver-Task-1/savetitle.png
 [expiration]: ../images/WebDriver-Task-1/Expiration.png
 [newpage]: ../images/WebDriver-Task-1/newPage.png
