@@ -4,3 +4,4 @@ coverage
 allure-results
 allure-report
 screenshots
+testResults.xml

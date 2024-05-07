@@ -5,18 +5,10 @@ class dropmenu {
     
     async dropMenuElement(param){
         const selector = {
-            '10m': '10 Minutes'
+            '10m': '10M'
         }
-
-        const dropList = await this.rootEl.$$('li');
-        const findElements = await dropList.filter(async (element)=>{
-            const htmltext = await element.getHTML();
-            if(htmltext.includes(selector[param.toLowerCase()])){
-                return true;
-            }
-            return false;
-        })
-        return findElements[0];
+        const findElements = await this.rootEl.$(`//li[contains(@id,"${selector[param]}")]`)
+        return findElements;
     }
 }
 module.exports = dropmenu

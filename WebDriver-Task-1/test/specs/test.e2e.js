@@ -35,6 +35,7 @@ describe('add paste bin stick', () => {
 
         await expirationbutton.click();
 
+        await (await dropMenuPage.rootEl).isExisting();
         const expirationDrop = await dropMenuPage.dropMenuElement('10m');
 
         await expirationDrop.click();
@@ -44,18 +45,13 @@ describe('add paste bin stick', () => {
         await pasteTitleText.setValue('helloweb');
         await saveScreenShot('./screenshots/','savetitle.png');
 
-        console.log(await textForm.getValue());
-        console.log(await pasteTitleText.getValue());
-
         await binPage.scrollDown(0,600);
         await addButton.click();
-
-        await saveScreenShot('./screenshots/','newPage.png');
 
         const pageTitle = 'Hello from WebDriver';
         const title = await titleMenu.rootEl;
 
-        console.log(title);
+        await saveScreenShot('./screenshots/','newPage.png');
 
         expect(title).toHaveText(pageTitle)
     })
