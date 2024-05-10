@@ -1,4 +1,4 @@
-const { expect, browser, $ } = require('@wdio/globals')
+const { browser} = require('@wdio/globals')
 class pasteBinPage{
     async open(){
         await browser.url('https://pastebin.com/')
