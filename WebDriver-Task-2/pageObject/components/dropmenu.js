@@ -20,32 +20,17 @@ class dropmenu {
     }
 
     async dropMenuLanguages(param){
-        if(param != 'None'){
-            const selector = {
-                bash: 'Bash'
-            }
-            const select = await this.langEl.$(`//li[contains(text(),"${selector[param.toLowerCase()]}")]`);
-            return select;
-        }else{
-            return await findElementInList('None',this.langEl.$$('li'));
+        const selector = {
+            bash: 'Bash'
         }
+        const select = await this.langEl.$(`//li[contains(text(),"${selector[param.toLowerCase()]}")]`);
+        return select;
     }
 
     async filterMenuLanguages(param){
         const filter = await this.filterLangEl;
         filter.setValue(param);
     }
-}
-
-async function findElementInList(text,arrayList){
-    const findElements = await arrayList.filter(async (element)=>{
-        const htmltext = await element.getHTML();
-        if(htmltext.includes(text)){
-            return true;
-        }
-        return false;
-    })
-    return findElements[0];
 }
 
 module.exports = dropmenu
