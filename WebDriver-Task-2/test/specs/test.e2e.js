@@ -7,78 +7,129 @@ const titlePage = require('../../pageObject/components/title.js');
 const topButton = require('../../pageObject/components/topbuttons.js');
 const sourceElement = require('../../pageObject/components/source.js');
 
-const binPage = new pastebinPage();
-const formPage = new form();
-const dropMenuPage = new dropMenu();
-const titleMenu = new titlePage();
-const topButtonMenu = new topButton();
-const sourceMenu = new sourceElement();
+const screenShotsFilePath = './screenshots/';
 
-describe('add paste bash stick', () => {
+let binPage = '';
+let formPage = '';
+let dropMenuPage = '';
+let titleMenu = '';
+let topButtonMenu = '';
+let sourceMenu = '';
+
+const initialPageTitle = 'Pastebin.com - #1 paste tool since 2002!';
+const desiredStickyText = 'git config --global user.name  "New Sheriff in Town" \ngit reset $(git commit-tree HEAD^{tree} -m "Legacy code") \ngit push origin master --force';
+
+const inputText = ['git config','--global','user.name','"New Sheriff in Town"',
+        'git reset','git commit-tree','HEAD^','"Legacy code"',
+        'git push','origin master','--force']
+
+const desiredExpirationValue = '10 Minutes';
+const formexpirationValue = '10m';
+
+const desiredLanguage = 'Bash';
+const formlanguageValue = 'bash';
+
+const desiredStickyTitleValue = 'how to gain dominance among developers';
+
+describe('add paste bin stick with 10 min expiration,a language highlight ,a custom title and custom text', () => {
     
-    beforeEach(async()=>{
+    before(async()=>{
+        binPage = new pastebinPage();
+        formPage = new form();
+        dropMenuPage = new dropMenu();
+        titleMenu = new titlePage();
+        topButtonMenu = new topButton();
+        sourceMenu = new sourceElement();
         await binPage.open();
     })
 
-    it('check adding the bash parameters', async () => {
+    it('check The sticky page title',async()=>{
+        const title = await titleMenu.rootEl;
+
+        expect(title).toHaveText(initialPageTitle);
+    })
+
+    it('check that the text form is changed to the desired value',async()=>{
         const textForm = await formPage.formElements('text');
-        const expirationbutton = await formPage.formElements('expirationbutton');
-        const languagebutton = await formPage.formElements('highlight');
-        const pasteTitleText = await formPage.formElements('pastetitle');
-        const addButton = await formPage.formElements('addbutton');
-
         await textForm.clearValue();
-        await textForm.addValue('git config --global user.name  "New Sheriff in Town" \n');
-        await textForm.addValue('git reset $(git commit-tree HEAD^{tree} -m "Legacy code") \n');
-        await textForm.addValue('git push origin master --force');
+        await textForm.setValue(desiredStickyText);
+        await saveScreenShot(screenShotsFilePath,'saveText.png');
 
-        await saveScreenShot('./screenshots/','saveText.png');
+        expect(textForm).toHaveText(desiredStickyText)
+    })
 
+    it('check that the expiration is changed to the desired value',async()=>{
+        const expirationbutton = await formPage.formElements('expirationbutton');
         await binPage.scrollDown(0,600);
         await expirationbutton.click();
+
         await (await dropMenuPage.rootEl).isExisting();
-        const expirationDrop = await dropMenuPage.dropMenuElement('10m');
+        const expirationDrop = await dropMenuPage.dropMenuElement(formexpirationValue);
+
         await expirationDrop.click();
 
-        await saveScreenShot('./screenshots/','saveExpiration.png');
+        await saveScreenShot(screenShotsFilePath,'saveExpiration.png');
 
-        await pasteTitleText.setValue('how to gain dominance among developers');
-        await saveScreenShot('./screenshots/','savetitle.png');
-      
+        expect(expirationbutton).toHaveText(desiredExpirationValue);
+    })
+
+    it(`Check that the language is changed to the desired value`,async()=>{
+        const languagebutton = await formPage.formElements('highlight');
         
         await languagebutton.click();
         await (await dropMenuPage.langEl).isExisting();
 
-        await dropMenuPage.filterMenuLanguages('bash');
-        const languageDrop = await dropMenuPage.dropMenuLanguages('bash');
+        await dropMenuPage.filterMenuLanguages(formlanguageValue);
+        const languageDrop = await dropMenuPage.dropMenuLanguages(formlanguageValue);
         await languageDrop.click();
 
-        await saveScreenShot('./screenshots/','saveLanguage.png');
+        await saveScreenShot(screenShotsFilePath,'saveLanguage.png');
+
+        expect(languagebutton).toHaveText(desiredLanguage)
+    })
+
+    it(`Check that the sticky title value is changed to the desired value`,async()=>{
+        
+        const pasteTitleText = await formPage.formElements('pastetitle');
+        await pasteTitleText.setValue(desiredStickyTitleValue);
+
+        await saveScreenShot(screenShotsFilePath,'savetitle.png');
+
+        expect(pasteTitleText).toHaveText(desiredStickyTitleValue);
+    })
+
+    it('Check adding a new paste bin',async()=>{
+        const addButton = await formPage.formElements('addbutton');
 
         await binPage.scrollDown(0,600);
         await addButton.click();
 
-        const pageTitle = 'how to gain dominance among developers';
-        const langType = 'Bash';
-        const inputText = ['git config','--global','user.name','"New Sheriff in Town"',
-        'git reset','git commit-tree','HEAD^','"Legacy code"',
-        'git push','origin master','--force']
-
         const title = await titleMenu.rootEl;
-        const languageText = await topButtonMenu.buttonElement(langType);
+
+        await saveScreenShot(screenShotsFilePath,'newPage.png');
+
+        expect(title).toHaveText(desiredStickyTitleValue)
+    })
+
+    it(`Check the language of the sticky note`,async()=>{
+        const languageText = await topButtonMenu.buttonElement(desiredLanguage);
+        expect(languageText).toHaveText(desiredLanguage)
+    })
+
+    it('check the result text', async () => {
         const sourceItem = await sourceMenu.rootEl;
-
-        await saveScreenShot('./screenshots/','newPage.png');
-
-        expect(title).toHaveText(pageTitle) && expect(languageText).toHaveText(langType)
-        && expect(sourceItem).toHaveText(inputText[0]) && expect(sourceItem).toHaveText(inputText[1])
-        && expect(sourceItem).toHaveText(inputText[2]) && expect(sourceItem).toHaveText(inputText[3])
-        && expect(sourceItem).toHaveText(inputText[4]) && expect(sourceItem).toHaveText(inputText[5])
-        && expect(sourceItem).toHaveText(inputText[6]) && expect(sourceItem).toHaveText(inputText[7])
-        && expect(sourceItem).toHaveText(inputText[8]) && expect(sourceItem).toHaveText(inputText[9])
-        && expect(sourceItem).toHaveText(inputText[10])
+        //Validation done this way cause the HTML to simplify the validation processs
+        expect(sourceItem).toHaveText(inputText)
         
-        //expect(pasteTitleText).toHaveText('how to gain dominance among developers');
+    })
+
+    after(async()=>{
+        binPage = null;
+        formPage = null;
+        dropMenuPage = null;
+        titleMenu = null;
+        topButtonMenu = null;
+        sourceMenu = null;
     })
 })
 
