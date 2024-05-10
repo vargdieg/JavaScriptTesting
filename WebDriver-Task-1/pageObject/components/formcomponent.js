@@ -6,7 +6,6 @@ class form {
     formElements(param){
         const selector = {
             text : '.js-create-form>.form-group>.js-paste-code',
-            expirationoptions : '#postform-expiration.form-control',
             expirationbutton: '#select2-postform-expiration-container',
             pastetitle: '#postform-name',
             addbutton: '.form-btn-container>.btn'
