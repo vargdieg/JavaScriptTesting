@@ -7,7 +7,7 @@
 
 # unitTestingFrameworks-Task1
 
-In this folder, it is going to be allocated the project and test files for the is_number app.
+In this folder, it is going to be allocated the project and test files (isNumberEven.spec.js) for the numbers_validator.js app.
 
 ![folderStructure][folderStructure]
 
