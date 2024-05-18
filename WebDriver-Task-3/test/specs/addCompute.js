@@ -299,11 +299,12 @@ describe('Estimation of an order of compute', () => {
                     it('Should select number of GPU in case GPU is selected',async ()=>{
                         if(addGPU == 'true'){
                             const GPUNumber = instanceForm.instanceForm('numbergpu');
+                            await GPUNumber.scrollIntoView({ block: 'center', inline: 'center' })
                             await GPUNumber.click();
             
                             await instanceForm.waitForList('numbergpu',7);
                             const gpuNumberList = await instanceForm.numberGpuSelectionList(gpuNumberValue);
-                            await gpuNumberList.click();
+                            await (await gpuNumberList).click();
             
                             await instanceForm.waitForListVanish('numbergpu',7);
             
@@ -320,7 +321,8 @@ describe('Estimation of an order of compute', () => {
                     
                         await instanceForm.waitForList('localssd',7);
             
-                        await localSSDList.click();
+                        const localSSDList = await instanceForm.localSSDSelectionList(localSSDValue);
+                        await (await localSSDList).click();
             
                         await instanceForm.waitForListVanish('localssd',7);
                 

@@ -124,7 +124,6 @@ class instanceForm{
             '4': '4',
             '8': '8'
         }
-        // return this.selectionList('numberGpuList').$(`//li[contains(@data-value,"${selector[param]}")]`)
         return this.selectionList('numberGpuList').$(`//li[@data-value=${selector[param]}]`);
     }
 
@@ -136,7 +135,6 @@ class instanceForm{
             '3x375': '3',
             '24x375': '24',
         }
-        // return this.selectionList('localssd').$(`//li[contains(@data-value,"${selector[param]}")]`)
         return this.selectionList('localssd').$(`//li[@data-value=${selector[param]}]`)
     }
 

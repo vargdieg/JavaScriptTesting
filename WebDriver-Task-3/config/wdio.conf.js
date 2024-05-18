@@ -52,10 +52,15 @@ exports.config = {
     // https://saucelabs.com/platform/platform-configurator
     //
     capabilities: [{
-        browserName: 'chrome'
-    }, {
-        browserName: 'firefox'
-    }],
+        browserName: 'chrome',
+        'goog:chromeOptions':{
+            args: ['--incognito']
+        }
+    }, 
+    // {
+    //     browserName: 'firefox'
+    // }
+    ],
 
     //
     // ===================
