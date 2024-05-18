@@ -124,19 +124,17 @@ class instanceForm{
             '4': '4',
             '8': '8'
         }
-        // return this.selectionList('numberGpuList').$(`//li[contains(@data-value,"${selector[param]}")]`)
         return this.selectionList('numberGpuList').$(`//li[@data-value=${selector[param]}]`);
     }
 
     localSSDSelectionList(param){
         const selector = {
-            '0': 0,
-            '1x375': 1,
-            '2x375': 2,
-            '3x375': 3,
-            '24x375': 24,
+            '0': '0',
+            '1x375': '1',
+            '2x375': '2',
+            '3x375': '3',
+            '24x375': '24',
         }
-        // return this.selectionList('localssd').$(`//li[contains(@data-value,"${selector[param]}")]`)
         return this.selectionList('localssd').$(`//li[@data-value=${selector[param]}]`)
     }
 
@@ -177,5 +175,3 @@ class instanceForm{
         return selector[param]
     }
 }
-
-module.exports = instanceForm
