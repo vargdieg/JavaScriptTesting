@@ -212,7 +212,7 @@ describe('Estimation of an order of compute', () => {
                         await proivisionModel.click();
                 
                         expect(provisionInput).toHaveAttr('checked','');
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectOperatingSystem.png');
+                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectProvisionModel.png');
                     })
                 
                     it('Should select the machine family', async()=>{
