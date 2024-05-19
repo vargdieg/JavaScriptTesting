@@ -22,6 +22,20 @@ class instanceForm{
         return this.rootEl.$(`${selector[param]}`)
     }
 
+    instanceFormText(param){
+        const selector = {
+            software: '//span[contains(@jsname,"Fb0Bif")]',
+            machinefamily: '//span[contains(@jsname,"Fb0Bif")]',
+            machineseries: '//span[contains(@jsname,"Fb0Bif")]',
+            machinetype: '//span[contains(@jsname,"Fb0Bif")]',
+            gpumodel: '//span[contains(@jsname,"Fb0Bif")]',
+            numbergpu: '//span[contains(@jsname,"Fb0Bif")]',
+            localssd: '//span[contains(@jsname,"Fb0Bif")]',
+            region: '//span[contains(@jsname,"Fb0Bif")]',
+        }
+        return this.instanceForm(param).$(`${selector[param]}`)
+    }
+
     provisionModel(param){
         const selector = {
             regular: 'Regular',
@@ -175,3 +189,5 @@ class instanceForm{
         return selector[param]
     }
 }
+
+module.exports = instanceForm;
