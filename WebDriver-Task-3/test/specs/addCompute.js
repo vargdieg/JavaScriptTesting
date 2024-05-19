@@ -329,15 +329,9 @@ describe('Estimation of an order of compute', () => {
                         await localSSD.click();
                     
                         await pricingInstanceForm.waitForList('localssd',7);
-                        const selector = {
-                            '0': 0,
-                            '1x375': 1,
-                            '2x375': 2,
-                            '3x375': 3,
-                            '24x375': 24,
-                        }
-                        const localSSDList = await $(`//ul[contains(@aria-label,"Local SSD")]//li[@data-value="${selector[localSSDValue]}"]`)
-                        await localSSDList.scrollIntoView({ block: 'center', inline: 'center' })
+                        
+                        const localSSDList = await pricingInstanceForm.localSSDSelectionList(localSSDValue);
+                        await (await localSSDList).scrollIntoView({ block: 'center', inline: 'center' })
                         await localSSDList.click();
             
                         await pricingInstanceForm.waitForListVanish('localssd',7);

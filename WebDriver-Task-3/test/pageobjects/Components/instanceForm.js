@@ -143,13 +143,13 @@ class instanceForm{
 
     localSSDSelectionList(param){
         const selector = {
-            '0': '0',
-            '1x375': '1',
-            '2x375': '2',
-            '3x375': '3',
-            '24x375': '24',
+            '0': 0,
+            '1x375': 1,
+            '2x375': 2,
+            '3x375': 3,
+            '24x375': 24,
         }
-        return this.selectionList('localssd').$(`//li[@data-value=${selector[param]}]`)
+        return $(`//ul[contains(@aria-label,"Local SSD")]//li[@data-value="${selector[param]}"]`)
     }
 
     regionSelectionList(param){
