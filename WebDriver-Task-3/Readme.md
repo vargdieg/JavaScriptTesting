@@ -157,7 +157,7 @@ This command is going to execute all the test specified on the addCompute.js fil
 
 ![runningTest][runningTest]
 
-After the completition of the tests, there is going to be created new folders, allure-results, allure-report,a file named testResult, and a folder named screenchots, that is going to have the screenshots of the test and folder of the steps to add a new instance
+After the completition of the tests, there is going to be created new folders, allure-results, allure-report,a file named testResult, and a folder named screenshots, that is going to have the screenshots of the test and folder of the steps when adding new instances
 
 ![completeTest][completeTest]
 

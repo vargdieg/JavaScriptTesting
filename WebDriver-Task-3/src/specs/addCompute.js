@@ -1,14 +1,14 @@
-const { expect } = require('@wdio/globals')
-const title = require('../pageobjects/Components/titleComponent.js');
-const basePage = require('../pageobjects/Components/page.js');
-const addEstimateForm = require('../pageobjects/Components/addEstimateForm.js');
-const instanceFormElement = require('../pageobjects/Components/instanceForm.js');
-const costDetailElement = require('../pageobjects/Components/costsDetails.js');
-const estimatePreviewElement = require('../pageobjects/Components/estimatePreview.js');
-const mainpage = require('../pageobjects/googleMainPage.js');
-const searchPage = require('../pageobjects/googleCloudSearchPage.js');
-const pricingPage = require('../pageobjects/googlePricingPage.js');
+const { expect } = require('@wdio/globals');
 const { existsSync, mkdirSync } = require('fs');
+
+const addItemGroup = require('../PageObject/Components/addItemGroupForm.js');
+const instanceFormElement = require('../PageObject/Components/instanceForm.js');
+const costDetailElement = require('../PageObject/Components/costsDetails.js');
+
+const mainpage = require('../PageObject/pages/googleMainPage.js');
+const searchPage = require('../PageObject/pages/googleCloudSearchPage.js');
+const pricingPage = require('../PageObject/pages/googlePricingPage.js');
+const estimatePreview = require('../PageObject/pages/googleEstimatePreviewPage.js');
 
 const testInstance = require('../datatest/dataTest.js');
 
@@ -17,12 +17,11 @@ const screenShotsFilePath = './screenshots';
 let googleMainPage = '';
 let searchPageResult = '';
 let pricingCloudPage = '';
-let titleComponent = '';
-let basePageComponent = '';
-let addEstForm = '';
+let estimatePreviewPage = '';
+
+let addItemGroupForm = '';
 let pricingInstanceForm = '';
 let costDetailComponent = '';
-let estimatePreviewComponent = '';
 
 const googleMainPageTitle = 'Servicios de cloud computing | Google Cloud';
 const searchInputText = 'Google Cloud Platform Pricing Calculator';
@@ -35,15 +34,13 @@ const elementToAdd = 'computeEngine';
 
 let totalCost = '';
 
+//This selectors are used for value validation, right now it is being validate with the text on the inputs selectors
+//Buttons are being validated with a property called checked
+
 const osSelector = {
     free: 'Free: Debian, CentOS, CoreOS, Ubuntu or BYOL (Bring Your Own License)',
     paidubuntu: 'Paid: Ubuntu Pro',
     paidwindows2012: 'Paid: Windows Server 2012 R2, Windows Server 2016, Windows Server 2019, Windows Server (2004, 20H2)'
-}
-
-const provisionModelSelector = {
-    regular: 'regular',
-    spot: 'spot'
 }
 
 const machineTypeSelector = {
@@ -93,31 +90,24 @@ const regionSelector = {
     uswest2: 'us-west2'
 }
 
-const commitedSelector = {
-    none: 'none',
-    year: 'year',
-    year3: 'year3'
-}
-
 describe('Estimation of an order of compute', () => {
     before(async()=>{
         googleMainPage = new mainpage();
         searchPageResult = new searchPage();
         pricingCloudPage = new pricingPage();
-        titleComponent = new title();
-        basePageComponent = new basePage();
-        addEstForm = new addEstimateForm();
+        estimatePreviewPage = new estimatePreview();
+        addItemGroupForm = new addItemGroup();
         pricingInstanceForm = new instanceFormElement();
         costDetailComponent = new costDetailElement();
-        estimatePreviewComponent = new estimatePreviewElement();
+    
         await googleMainPage.open();
     })
 
     describe('Navigate to the google cloud page',()=>{
         it('Should check google main page title',async()=>{
-            const title = await titleComponent.title;
+            const title = await googleMainPage.title;
             expect(title).toHaveText(googleMainPageTitle);
-    
+            
             await saveScreenShot(`${screenShotsFilePath}/`,'openGoogleMainPage.png');
         })
     
@@ -132,11 +122,11 @@ describe('Estimation of an order of compute', () => {
     
             
             await saveScreenShot(`${screenShotsFilePath}/`,'tryingToSearch.png');
-            await basePageComponent.pressEnter();
+            await googleMainPage.pressEnter();
         })
     
         it('Should check the title of the search page',async()=>{
-            const title = await titleComponent.title;
+            const title = await searchPageResult.title;
             expect(title).toHaveText(searchTitleText);
             await saveScreenShot(`${screenShotsFilePath}/`,'searchPage.png');
         })
@@ -145,9 +135,9 @@ describe('Estimation of an order of compute', () => {
             const desiredPage = await searchPageResult.FindPage(searchParams);
             await desiredPage.click();
     
-            await basePageComponent.waitPage(7);
+            await searchPageResult.waitPage(7);
             
-            const title = await titleComponent.title;
+            const title = await pricingCloudPage.title;
             expect(title).toHaveText(googlePricingTitle);
             await saveScreenShot(`${screenShotsFilePath}/`,'pricingCalculatorPage.png');
             await pricingCloudPage.maximiseWindown();
@@ -159,16 +149,16 @@ describe('Estimation of an order of compute', () => {
             gpuModelValue,gpuNumberValue,localSSDValue,regionValue,commitedSelection})=>{
                 describe(`Adding element ${name}`,()=>{
                     it('Should click the add estimate button and show the menu',async()=>{
-                        const addEstimateBttn = pricingCloudPage.addEstimate;
+                        const addEstimateBttn = await pricingCloudPage.addEstimate;
                         await addEstimateBttn.scrollIntoView({ block: 'center', inline: 'center' })
-                        await addEstimateBttn.click();
+                        await (await addEstimateBttn).click();
                 
                         await pricingCloudPage.waitForPopup(7);
                         await saveScreenShot(`${screenShotsFilePath}/${name}/`,'addEstimateClicked.png');
                     })
                 
                     it('Should select to add a compute item',async()=>{
-                        const toAdd = addEstForm.formElement(elementToAdd);
+                        const toAdd = await addItemGroupForm.formElement(elementToAdd);
                         await toAdd.scrollIntoView({ block: 'center', inline: 'center' })
                         toAdd.click();
                 
@@ -177,7 +167,7 @@ describe('Estimation of an order of compute', () => {
                     })
                 
                     it('Should select a number of instances',async()=>{
-                        const numberInstances = pricingInstanceForm.instanceForm('number');
+                        const numberInstances = await pricingInstanceForm.instanceForm('number');
                         await numberInstances.scrollIntoView({ block: 'center', inline: 'center' })
                         await numberInstances.setValue(numberOfInstances);
                 
@@ -206,9 +196,10 @@ describe('Estimation of an order of compute', () => {
                     })
                 
                     it('Should select the provisioning model', async()=>{
-                        const proivisionModel = await pricingInstanceForm.provisionModel(provisionModelSelector[provisionModelSelection]);
+                        const proivisionModel = await pricingInstanceForm.provisionModel(provisionModelSelection);
                         await proivisionModel.scrollIntoView({ block: 'center', inline: 'center' })
-                        const provisionInput = await pricingInstanceForm.provisionModelInput(provisionModelSelector[provisionModelSelection]);
+
+                        const provisionInput = await pricingInstanceForm.provisionModelInput(provisionModelSelection);
                         await proivisionModel.click();
                 
                         expect(provisionInput).toHaveAttr('checked','');
@@ -361,8 +352,8 @@ describe('Estimation of an order of compute', () => {
                     })
             
                     it('Should select commited use discount options', async()=>{
-                        const commitedOptions = pricingInstanceForm.commitedOptions(commitedSelector[commitedSelection]);
-                        const commitedInput = pricingInstanceForm.commitedOptionsInput(commitedSelector[commitedSelection]);
+                        const commitedOptions = pricingInstanceForm.commitedOptions(commitedSelection);
+                        const commitedInput = pricingInstanceForm.commitedOptionsInput(commitedSelection);
                         await commitedOptions.scrollIntoView({ block: 'center', inline: 'center' })
                         await commitedOptions.click();
                 
@@ -391,16 +382,15 @@ describe('Estimation of an order of compute', () => {
         it('Should open the summary estimation',async()=>{
 
             const summaryBttn = await costDetailComponent.summaryBttn;
-
             summaryBttn.click();
-
             await costDetailComponent.waitForDetails(7);
-            await browser.switchWindow('https://cloud.google.com/products/calculator/estimate-preview')
+
+            await estimatePreviewPage.switchToEstimate();
             await saveScreenShot(`${screenShotsFilePath}/`,'summaryEstimation.png');
         })
 
         it('Should compare the total estimated cost on new page and the old page',async()=>{
-            const totalEstimated = await estimatePreviewComponent.estimatedCost;
+            const totalEstimated = await estimatePreviewPage.estimatedCost;
 
             expect(totalEstimated).toHaveText(totalCost);
             await saveScreenShot(`${screenShotsFilePath}/`,'checkingValues.png');
@@ -412,12 +402,10 @@ describe('Estimation of an order of compute', () => {
         googleMainPage = null;
         searchPageResult = null;
         pricingCloudPage = null;
-        titleComponent = null;
-        basePageComponent = null;
-        addEstForm = null;
+        estimatePreviewPage = null;
+        addItemGroupForm = null;
         pricingInstanceForm = null;
         costDetailComponent = null;
-        estimatePreviewComponent = null;
     })
 })
 

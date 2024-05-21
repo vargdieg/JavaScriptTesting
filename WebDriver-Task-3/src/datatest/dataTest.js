@@ -23,8 +23,6 @@ const createInstance = [
     seriesMachineValue : 'n2',
     machineTypeValue : 'n2standar2',
     addGPU : 'false',
-    gpuModelValue : 'nvidiateslav100',
-    gpuNumberValue : '1',
     localSSDValue : '3x375',
     regionValue : 'uscentral1',
     commitedSelection : 'year3',

@@ -3,6 +3,10 @@ class mainPage{
         return browser.url(`https://cloud.google.com/`)
     }
 
+    get title(){
+        return $('//title');
+    }
+
     get header(){
         return $('//div[contains(@class,"ZUAiPc") and contains(@jsname,"RShKxc")]');
     }
@@ -13,6 +17,10 @@ class mainPage{
 
     get FindInputText(){
         return this.FindElement.$('//input[contains(@class,"mb2a7b") and contains(@jsname,"jjXxte")]');
+    }
+
+    pressEnter(){
+        return browser.keys('\uE007')
     }
 }
 
