@@ -1,6 +1,6 @@
 class googlePricingPage {
     open(){
-        return browser.url('https://cloud.google.com/products/calculator?hl=es')
+        return browser.url('https://cloud.google.com/products/calculator?hl=es-419')
     }
 
     get title(){
@@ -16,11 +16,11 @@ class googlePricingPage {
     }
 
     waitForPopup(time){
-        return this.popup.waitForDisplayed({ timeout: time*1000, reverse: false, timeoutMsg: 'Pop up did not show', interval: 500 })
+        return this.popup.waitForDisplayed({ timeout: time*1000, reverse: false, timeoutMsg: 'Pop up did not show', interval: 10 })
     }
 
     waitForClosingPopup(time){
-        return this.popup.waitForDisplayed({ timeout: time*1000, reverse: true, timeoutMsg: 'Pop up did not vanish', interval: 500 })
+        return this.popup.waitForDisplayed({ timeout: time*1000, reverse: true, timeoutMsg: 'Pop up did not vanish', interval: 10 })
     }
 
     async maximiseWindown(){
