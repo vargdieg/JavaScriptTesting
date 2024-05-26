@@ -12,7 +12,7 @@ class mainPage{
     }
 
     get FindElement(){
-        return this.header.$('//div[contains(@class,"ND91id") and contains(@jsname,"MVsrn")]');
+        return this.header.$('//div[contains(@class,"ND91id ") and contains(@jsname,"MVsrn")]');
     }
 
     get FindInputText(){
