@@ -1,6 +1,6 @@
 class mainPage{
     open(){
-        return browser.url(`https://cloud.google.com/`)
+        return browser.url('https://cloud.google.com/?hl=es-419');
     }
 
     get title(){
@@ -12,7 +12,7 @@ class mainPage{
     }
 
     get FindElement(){
-        return this.header.$('//div[contains(@class,"ND91id ") and contains(@jsname,"MVsrn")]');
+        return this.header.$('//div[contains(@class,"ND91id") and contains(@jsname,"MVsrn")]');
     }
 
     get FindInputText(){

@@ -148,11 +148,13 @@ describe('Estimation of an order of compute', () => {
         testInstance.forEach(({name,numberOfInstances,operatingSystemValue,provisionModelSelection,machineFamilyValue,seriesMachineValue,machineTypeValue,addGPU,
             gpuModelValue,gpuNumberValue,localSSDValue,regionValue,commitedSelection})=>{
                 describe(`Adding element ${name}`,()=>{
+
                     it('Should click the add estimate button and show the menu',async()=>{
+
                         const addEstimateBttn = await pricingCloudPage.addEstimate;
-                        await addEstimateBttn.scrollIntoView({ block: 'center', inline: 'center' })
+                        await (await addEstimateBttn).scrollIntoView({ block: 'center', inline: 'center' })
                         await (await addEstimateBttn).click();
-                
+
                         await pricingCloudPage.waitForPopup(7);
                         await saveScreenShot(`${screenShotsFilePath}/${name}/`,'addEstimateClicked.png');
                     })
