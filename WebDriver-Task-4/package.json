@@ -1,0 +1,23 @@
+{
+  "name": "webdriver-task-3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "critical": "wdio run ./src/config/wdio.conf.js --suite criticalRoute",
+    "testing": "wdio run ./src/config/wdio.conf.js --suite testAddInstanceRoute",
+    "production": "wdio run ./src/config/wdio.conf.js --suite prodAddInstanceRoute"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@wdio/allure-reporter": "^8.36.1",
+    "@wdio/cli": "^8.36.1",
+    "@wdio/junit-reporter": "^8.36.1",
+    "@wdio/local-runner": "^8.36.1",
+    "@wdio/mocha-framework": "^8.36.1",
+    "@wdio/spec-reporter": "^8.36.1",
+    "@wdio/visual-service": "^4.1.2",
+    "allure-commandline": "^2.29.0"
+  }
+}
