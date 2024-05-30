@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "critical": "wdio run ./src/config/wdio.conf.js --suite criticalRoute",
-    "testing": "wdio run ./src/config/wdio.conf.js --suite testAddInstanceRoute",
-    "production": "wdio run ./src/config/wdio.conf.js --suite prodAddInstanceRoute"
+    "testing": "NODE_ENV=testing wdio run ./src/config/wdio.conf.js --suite testAddInstanceRoute",
+    "production": "NODE_ENV=production wdio run ./src/config/wdio.conf.js --suite testAddInstanceRoute"
   },
   "author": "",
   "license": "ISC",
@@ -19,5 +19,8 @@
     "@wdio/spec-reporter": "^8.36.1",
     "@wdio/visual-service": "^4.1.2",
     "allure-commandline": "^2.29.0"
+  },
+  "dependencies": {
+    "win-node-env": "^0.6.1"
   }
 }

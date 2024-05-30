@@ -29,9 +29,6 @@ exports.config = {
         criticalRoute:[
             '../specs/criticalRoute.js'
         ],
-        prodAddInstanceRoute:[
-            '../specs/addCompute.js'
-        ],
         testAddInstanceRoute:[
             '../specs/addComputeTesting.js'
         ]

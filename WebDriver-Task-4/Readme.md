@@ -1,11 +1,11 @@
-# Index WebDriver-Task-3
+# Index WebDriver-Task-4
 
 1. [Introduction](#unittestingframeworks-task1)
 2. [Dependency installation](#dependency-installation)
 3. [Configure Testing](#configure-testing)
 4. [Executing Test](#executing-the-tests)
 
-# unitTestingFrameworks-Task1
+# unitTestingFrameworks-Task4
 
 In this folder, it is going to be allocated the project and test files for a web page.
 
@@ -32,7 +32,7 @@ For configuring the data test, you need to open the dataTest.js file on the data
 
 ![testdata][testdata]
 
-It can be edited to created multiple purchases of instances, with different values, the fields are the following:
+It is used a variable with keys, depending on the environtment to test, in each environtment can be allocated different test data, depending on the instance to add. the test data can be edited to created multiple purchases of instances, with different values, the fields are the following:
 
 ### name
 This is the name of the instance to be created, this value is used to create a folder to save screenshots of the test, and it also outputs on the tests logs, it can be used to debug
@@ -147,17 +147,26 @@ year3: 'year3'
 **NOTE:** At the moment of creating an instance, it is mandatory that some options are not going to depend on the choices you make (e.g for example GPU instances may have region limitations, therefore if used a region with no GPU avaliable, the test would fail) 
 
 ## Executing the tests
-For executing the test you can use the command
+These are the test avaliable to run:
 
 ```
-npm run wdio
+npm run critical
+npm run testing
+npm run production
 ```
 
-This command is going to execute all the test specified on the addCompute.js file in the specs folder
+To configure the testSuite and environtment variables at runtime you can check:
+
+[Test suite][testSuite]
+
+[Environtment Variable][envVariable]
+
+**npm run testing and production:** This tests are going to purchase instances, the difference between the commands is the dataset used. This command execute the test under the addCompute.js file in the specs folder
+**npm run critical:** This test is used to open the google cloud main page, look for the pricing page, add an instance (default options are kept), and open the summary option
 
 ![runningTest][runningTest]
 
-After the completition of the tests, there is going to be created new folders, allure-results, allure-report,a file named testResult, and a folder named screenshots, that is going to have the screenshots of the test and folder of the steps when adding new instances
+After the completition of the tests, there is going to be created new folders, allure-results, allure-report,a file named testResult, and a folder named screenshots, in this folder it is going to be the screenshots of the test.
 
 ![completeTest][completeTest]
 
@@ -224,30 +233,31 @@ And then click on the summary to compare the values
 ![summarypage][summarypage]
 
 [liveserver]: https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer
+[testSuite]: https://webdriver.io/docs/organizingsuites/#grouping-test-specs-in-suites
+[envVariable]: https://webdriver.io/es/docs/parameterize-tests/#passing-environment-variables
+
+[folderStructure]: ../images/WebDriver-Task-4/FolderStructure.png
+[packageList]: ../images/WebDriver-Task-4/PackageList.png
+[installingDependencies]: ../images/WebDriver-Task-4/InstallingDependencies.png
+[testdata]: ../images/WebDriver-Task-4/TestData.png
+[runningTest]: ../images/WebDriver-Task-4/RunningTest.png
+[completeTest]: ../images/WebDriver-Task-4/CompleteTest.png
+[webserver]: ../images/WebDriver-Task-4/ReportFile.png
+[reportTest]: ../images/WebDriver-Task-4/ReportResult.png
+
+[opengooglecloud]: ../images/WebDriver-Task-4/openGoogleMainPage.png
+[searchpricingpage]: ../images/WebDriver-Task-4/tryingToSearch.png
+[pricingpageclick]: ../images/WebDriver-Task-4/searchPage.png
+[pricingpage]: ../images/WebDriver-Task-4/pricingCalculatorPage.png
+
+[addestimate]: ../images/WebDriver-Task-4/addEstimateClicked.png
+[numberinstance]: ../images/WebDriver-Task-4/SelectNumberInstances.png
+[operatingsystem]: ../images/WebDriver-Task-4/SelectOperatingSystem.png
+[machinetype]: ../images/WebDriver-Task-4/typeMachineSelector.png
+[numbergpu]: ../images/WebDriver-Task-4/SelectNumberGPU.png
+[localssd]: ../images/WebDriver-Task-4/localSSDSelector.png
+[commitusage]: ../images/WebDriver-Task-4/SelectCommitedOptions.png
 
 
-[folderStructure]: ../images/WebDriver-Task-3/FolderStructure.png
-[packageList]: ../images/WebDriver-Task-3/PackageList.png
-[installingDependencies]: ../images/WebDriver-Task-3/InstallingDependencies.png
-[testdata]: ../images/WebDriver-Task-3/TestData.png
-[runningTest]: ../images/WebDriver-Task-3/RunningTest.png
-[completeTest]: ../images/WebDriver-Task-3/CompleteTest.png
-[webserver]: ../images/WebDriver-Task-3/ReportFile.png
-[reportTest]: ../images/WebDriver-Task-3/ReportResult.png
-
-[opengooglecloud]: ../images/WebDriver-Task-3/openGoogleMainPage.png
-[searchpricingpage]: ../images/WebDriver-Task-3/tryingToSearch.png
-[pricingpageclick]: ../images/WebDriver-Task-3/searchPage.png
-[pricingpage]: ../images/WebDriver-Task-3/pricingCalculatorPage.png
-
-[addestimate]: ../images/WebDriver-Task-3/addEstimateClicked.png
-[numberinstance]: ../images/WebDriver-Task-3/SelectNumberInstances.png
-[operatingsystem]: ../images/WebDriver-Task-3/SelectOperatingSystem.png
-[machinetype]: ../images/WebDriver-Task-3/typeMachineSelector.png
-[numbergpu]: ../images/WebDriver-Task-3/SelectNumberGPU.png
-[localssd]: ../images/WebDriver-Task-3/localSSDSelector.png
-[commitusage]: ../images/WebDriver-Task-3/SelectCommitedOptions.png
-
-
-[shareestimate]: ../images/WebDriver-Task-3/estimateShareScreen.png
-[summarypage]: ../images/WebDriver-Task-3/summaryEstimation.png
+[shareestimate]: ../images/WebDriver-Task-4/estimateShareScreen.png
+[summarypage]: ../images/WebDriver-Task-4/summaryEstimation.png

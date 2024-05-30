@@ -10,9 +10,10 @@ const searchPage = require('../PageObject/pages/googleCloudSearchPage.js');
 const pricingPage = require('../PageObject/pages/googlePricingPage.js');
 const estimatePreview = require('../PageObject/pages/googleEstimatePreviewPage.js');
 
-const testInstance = require('../datatest/dataTestingEnv.js');
+const testInstance = require('../datatest/dataTest.js');
 
-const screenShotsFilePath = './screenshots/testing';
+let environmet = process.env.NODE_ENV;
+const screenShotsFilePath = `./screenshots/${environmet}`;
 
 let googleMainPage = '';
 let searchPageResult = '';
