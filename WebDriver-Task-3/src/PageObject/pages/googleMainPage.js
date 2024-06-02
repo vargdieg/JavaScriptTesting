@@ -4,7 +4,7 @@ class mainPage{
     }
 
     get title(){
-        return $('//title');
+        return $('//head//title');
     }
 
     get header(){

@@ -7,8 +7,8 @@ class instanceForm{
     instanceForm(param){
         const selector = {
             number: '//input[contains(@jsname,"YPqjbf")]',
-            software: '//div[contains(@class,"O1htCb-H9tDt PPUDSe t8xIwc")]',
-            model: '//div[contains(@class,"kqQzpb YgByBe")]',
+            software: '//div[contains(@data-field-type,"106")]',
+            model: '//div[contains(@data-field-type,"107")]',
             machinefamily: '//div[contains(@class,"qPg9F")]//div[contains(@class,"LHK0xb")]//div[contains(@jsname,"Wsw6tc")]',
             machineseries: '//div[contains(@class,"qPg9F")]//div[contains(@class,"LHK0xb")]//div[contains(@jsname,"vGGDlb")]',
             machinetype: '//div[contains(@class,"qPg9F")]//div[contains(@class,"LHK0xb")]//div[contains(@jsname,"kgDJk")]',
@@ -22,18 +22,18 @@ class instanceForm{
         return this.rootEl.$(`${selector[param]}`)
     }
 
-    instanceFormText(param){
+    async instanceFormText(param){
         const selector = {
-            software: '//span[contains(@jsname,"Fb0Bif")]',
-            machinefamily: '//span[contains(@jsname,"Fb0Bif")]',
-            machineseries: '//span[contains(@jsname,"Fb0Bif")]',
-            machinetype: '//span[contains(@jsname,"Fb0Bif")]',
-            gpumodel: '//span[contains(@jsname,"Fb0Bif")]',
-            numbergpu: '//span[contains(@jsname,"Fb0Bif")]',
-            localssd: '//span[contains(@jsname,"Fb0Bif")]',
-            region: '//span[contains(@jsname,"Fb0Bif")]',
+            software: '//div[contains(@class,"vHartc")]//div[contains(@data-field-type,"106")]//span[contains(@jsname,"Fb0Bif")]',
+            machinefamily: '//div[contains(@class,"vHartc")]//div[contains(@class,"qPg9F")]//div[contains(@class,"LHK0xb")]//div[contains(@jsname,"Wsw6tc")]//span[contains(@jsname,"Fb0Bif")]',
+            machineseries: '//div[contains(@class,"vHartc")]//div[contains(@class,"qPg9F")]//div[contains(@class,"LHK0xb")]//div[contains(@jsname,"vGGDlb")]//span[contains(@jsname,"Fb0Bif")]',
+            machinetype: '//div[contains(@class,"vHartc")]//div[contains(@class,"qPg9F")]//div[contains(@class,"LHK0xb")]//div[contains(@jsname,"kgDJk")]//span[contains(@jsname,"Fb0Bif")]',
+            gpumodel: '//div[contains(@class,"vHartc")]//div[contains(@data-field-type,"158")]//span[contains(@jsname,"Fb0Bif")]',
+            numbergpu: '//div[contains(@class,"vHartc")]//div[contains(@data-field-type,"174")]//span[contains(@jsname,"Fb0Bif")]',
+            localssd: '//div[contains(@class,"vHartc")]//div[contains(@data-field-type,"180")]//span[contains(@jsname,"Fb0Bif")]',
+            region: '//div[contains(@class,"vHartc")]//div[contains(@data-field-type,"115")]//span[contains(@jsname,"Fb0Bif")]',
         }
-        return this.instanceForm(param).$(`${selector[param]}`)
+        return $(`${selector[param]}`)
     }
 
     provisionModel(param){
@@ -126,7 +126,7 @@ class instanceForm{
             nvidiateslap100: 'nvidia-tesla-p100',
             nvidiateslap4: 'nvidia-tesla-p4',
             nvidiateslav100: 'nvidia-tesla-v100',
-            nvidiateslat4: 'nvidia-tesla-t4"'
+            nvidiateslat4: 'nvidia-tesla-t4'
         }
         return this.selectionList('gpuModelList').$(`//li[contains(@data-value,"${selector[param]}")]`)
     }
