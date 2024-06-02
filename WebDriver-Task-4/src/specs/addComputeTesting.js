@@ -24,9 +24,9 @@ let addItemGroupForm = '';
 let pricingInstanceForm = '';
 let costDetailComponent = '';
 
-const googleMainPageTitle = 'Servicios de cloud computing | Google Cloud';
+const googleMainPageTitle = 'Servicios de computación en la nube | Google Cloud';
 const searchInputText = 'Google Cloud Platform Pricing Calculator';
-const searchTitleText = `Resultados de la búsqueda de "${searchInputText}"  |  Google Cloud`;
+const searchTitleText = `Resultados de la búsqueda para "${searchInputText}"  |  Google Cloud`;
 const searchParams = 'Google Cloud Pricing Calculator';
 
 const googlePricingTitle = 'Calculadora de precios de Google Cloud';
@@ -66,8 +66,8 @@ const typeMachineSelector = {
 const gpuModelSelector = {
     nvidiateslap100: 'NVIDIA Tesla P100',
     nvidiateslap4: 'NVIDIA Tesla P4',
-    nvidiateslav100: 'NVIDIA Tesla V100',
-    nvidiateslat4: 'NVIDIA Tesla T4'
+    nvidiateslav100: 'NVIDIA V100',
+    nvidiateslat4: 'NVIDIA T4'
 }
 
 const gpuNumberselector = {
@@ -86,9 +86,9 @@ const localSSDSelector = {
 }
 
 const regionSelector = {
-    uscentral1: 'us-central1',
-    uswest1: 'us-west1',
-    uswest2: 'us-west2'
+    uscentral1: 'Iowa (us-central1)',
+    uswest1: 'Oregon (us-west1)',
+    uswest2: 'Los Angeles (us-west2)'
 }
 
 describe('Estimation of an order of compute', () => {
@@ -106,8 +106,7 @@ describe('Estimation of an order of compute', () => {
 
     describe('Navigate to the google cloud page',()=>{
         it('Should check google main page title',async()=>{
-            const title = await googleMainPage.title;
-            expect(title).toHaveText(googleMainPageTitle);
+            await expect(browser).toHaveTitle(expect.stringContaining(googleMainPageTitle));
             
             await saveScreenShot(`${screenShotsFilePath}/`,'openGoogleMainPage.png');
         })
@@ -117,9 +116,9 @@ describe('Estimation of an order of compute', () => {
             await findElement.click();
     
             const findElementText = await googleMainPage.FindInputText;
-    
             await findElementText.setValue(searchInputText);
-            expect(findElementText).toHaveText(searchInputText);
+
+            await expect(findElementText).toHaveValue(searchInputText);
     
             
             await saveScreenShot(`${screenShotsFilePath}/`,'tryingToSearch.png');
@@ -127,8 +126,7 @@ describe('Estimation of an order of compute', () => {
         })
     
         it('Should check the title of the search page',async()=>{
-            const title = await searchPageResult.title;
-            expect(title).toHaveText(searchTitleText);
+            await expect(browser).toHaveTitle(expect.stringContaining(searchTitleText));
             await saveScreenShot(`${screenShotsFilePath}/`,'searchPage.png');
         })
     
@@ -138,232 +136,245 @@ describe('Estimation of an order of compute', () => {
     
             await searchPageResult.waitPage(7);
             
-            const title = await pricingCloudPage.title;
-            expect(title).toHaveText(googlePricingTitle);
+            await expect(browser).toHaveTitle(expect.stringContaining(googlePricingTitle));
             await saveScreenShot(`${screenShotsFilePath}/`,'pricingCalculatorPage.png');
             await pricingCloudPage.maximiseWindown();
         })
     })
 
     describe('Add a compute elements',()=>{
-        testInstance.forEach(({name,numberOfInstances,operatingSystemValue,provisionModelSelection,machineFamilyValue,seriesMachineValue,machineTypeValue,addGPU,
-            gpuModelValue,gpuNumberValue,localSSDValue,regionValue,commitedSelection})=>{
+        let name = testInstance.name;
+        let numberOfInstances = testInstance.numberOfInstances;
+        let operatingSystemValue = testInstance.operatingSystemValue;
+        let provisionModelSelection = testInstance.provisionModelSelection;
+        let machineFamilyValue = testInstance.machineFamilyValue;
+        let seriesMachineValue = testInstance.seriesMachineValue;
+        let machineTypeValue = testInstance.machineTypeValue;
+        let addGPU = testInstance.addGPU;
+        let gpuModelValue = testInstance.gpuModelValue;
+        let gpuNumberValue = testInstance.gpuNumberValue;
+        let localSSDValue = testInstance.localSSDValue;
+        let regionValue = testInstance.regionValue;
+        let commitedSelection = testInstance.commitedSelection;
+
                 describe(`Adding element ${name}`,()=>{
 
-                    it('Should click the add estimate button and show the menu',async()=>{
+                    describe(`Adding element ${name}`,()=>{
 
-                        const addEstimateBttn = await pricingCloudPage.addEstimate;
-                        await (await addEstimateBttn).scrollIntoView({ block: 'center', inline: 'center' })
-                        await (await addEstimateBttn).click();
-
-                        await pricingCloudPage.waitForPopup(7);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'addEstimateClicked.png');
-                    })
-                
-                    it('Should select to add a compute item',async()=>{
-                        const toAdd = await addItemGroupForm.formElement(elementToAdd);
-                        await toAdd.scrollIntoView({ block: 'center', inline: 'center' })
-                        toAdd.click();
-                
-                        await pricingCloudPage.waitForClosingPopup(7);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectCompute.png');
-                    })
-                
-                    it('Should select a number of instances',async()=>{
-                        const numberInstances = await pricingInstanceForm.instanceForm('number');
-                        await numberInstances.scrollIntoView({ block: 'center', inline: 'center' })
-                        await numberInstances.setValue(numberOfInstances);
-                
-                        expect(numberInstances).toHaveText(numberOfInstances);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectNumberInstances.png');
-                    })
-                
-                    it('Should select operating system',async()=>{
-                
-                        const operatingSystem = await pricingInstanceForm.instanceForm('software');
-                        await operatingSystem.scrollIntoView({ block: 'center', inline: 'center' })
-                        await operatingSystem.click();
-                
-                        await pricingInstanceForm.waitForList('os',7);
-            
-                        const operationSystemSelection = pricingInstanceForm.operatingSystemList(operatingSystemValue);
-                
-                        await operationSystemSelection.click();
-                
-                        await pricingInstanceForm.waitForListVanish('os',7);
-            
-                        const operatingSystemText = await pricingInstanceForm.instanceFormText('software');
-
-                        expect(operatingSystemText).toHaveText(osSelector[operatingSystemValue]);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectOperatingSystem.png');
-                    })
-                
-                    it('Should select the provisioning model', async()=>{
-                        const proivisionModel = await pricingInstanceForm.provisionModel(provisionModelSelection);
-                        await proivisionModel.scrollIntoView({ block: 'center', inline: 'center' })
-
-                        const provisionInput = await pricingInstanceForm.provisionModelInput(provisionModelSelection);
-                        await proivisionModel.click();
-                
-                        expect(provisionInput).toHaveAttr('checked','');
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectProvisionModel.png');
-                    })
-                
-                    it('Should select the machine family', async()=>{
-                        const machineFamily = pricingInstanceForm.instanceForm('machinefamily');
-                        await machineFamily.scrollIntoView({ block: 'center', inline: 'center' })
-                        await machineFamily.click();
-                
-                        await pricingInstanceForm.waitForList('machinefamily',7);
-                        
-                        const machineSystemList = pricingInstanceForm.machineFamilyList(machineFamilyValue);
-                        await machineSystemList.click();
-                
-                        await pricingInstanceForm.waitForListVanish('machinefamily',7);
-
-                        const machineFamilyText = await pricingInstanceForm.instanceFormText('software');
-            
-                        expect(machineFamilyText).toHaveText(machineTypeSelector[machineFamilyValue]);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectMachineType.png');
-                    })
-                
-                    it('Should select the machine series',async()=>{
-                        const seriesMachine = await pricingInstanceForm.instanceForm('machineseries');
-                        await seriesMachine.scrollIntoView({ block: 'center', inline: 'center' })
-                        await seriesMachine.click();
+                        it('Should click the add estimate button and show the menu',async()=>{
+    
+                            const addEstimateBttn = await pricingCloudPage.addEstimate;
+                            await (await addEstimateBttn).scrollIntoView({ block: 'center', inline: 'center' })
+                            await (await addEstimateBttn).click();
+    
+                            await pricingCloudPage.waitForPopup(7);
+                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'addEstimateClicked.png');
+                        })
                     
-                        await pricingInstanceForm.waitForList('serieslist',7);
-                        
-            
-                        const machineSeriesList = await pricingInstanceForm.seriesMachineList(seriesMachineValue);
-                        await machineSeriesList.click();
-            
-                        await pricingInstanceForm.waitForListVanish('serieslist',7);
-
-                        const seriesMachineText = await pricingInstanceForm.instanceFormText('machineseries');
-                        
-                        expect(seriesMachineText).toHaveText(seriesSelector[seriesMachineValue]);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'seriesSelector.png');
-                    })
-            
-                    it('Should select the machine type',async()=>{
-                        const typeMachine = await pricingInstanceForm.instanceForm('machinetype');
-                        await typeMachine.scrollIntoView({ block: 'center', inline: 'center' })
-                        await typeMachine.click();
+                        it('Should select to add a compute item',async()=>{
+                            const toAdd = await addItemGroupForm.formElement(elementToAdd);
+                            await toAdd.scrollIntoView({ block: 'center', inline: 'center' })
+                            toAdd.click();
                     
-                        await pricingInstanceForm.waitForList('machinetypelist',7);
-            
-                        const machineTypeList = pricingInstanceForm.machineTypeList(machineTypeValue);
-                        await machineTypeList.click();
-            
-                        await pricingInstanceForm.waitForListVanish('machinetypelist',7);
-                        const typeMachineText = await pricingInstanceForm.instanceFormText('machineseries');
+                            await pricingCloudPage.waitForClosingPopup(7);
+                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectCompute.png');
+                        })
+                    
+                        it('Should select a number of instances',async()=>{
+                            const numberInstances = await pricingInstanceForm.instanceForm('number');
+                            await numberInstances.scrollIntoView({ block: 'center', inline: 'center' })
+                            await numberInstances.setValue(numberOfInstances);
+                    
+                            await expect(numberInstances).toHaveValue(`${numberOfInstances}`);
+                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'numberOfInstances.png');
+                        })
+                    
+                        it('Should select operating system',async()=>{
+                    
+                            const operatingSystem = await pricingInstanceForm.instanceForm('software');
+                            await operatingSystem.scrollIntoView({ block: 'center', inline: 'center' })
+                            await operatingSystem.click();
+                    
+                            await pricingInstanceForm.waitForList('os',7);
                 
-                        expect(typeMachineText).toHaveText(typeMachineSelector[machineTypeValue]);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'typeMachineSelector.png');
-                    })
-            
-                    it('Should select the addGPU button if needed',async ()=>{
-                        
-                        const addGPUButt = await pricingInstanceForm.instanceForm('addgpu');
-                        const valueGPU = await addGPUButt.getAttribute('aria-checked');
-                        await addGPUButt.scrollIntoView({ block: 'center', inline: 'center' })
-            
-                        if(valueGPU != addGPU){
-                            await addGPUButt.click();
-                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'GpuChange.png');
-                        }
-                        const GPUbutt = pricingInstanceForm.instanceForm('addgpu');
-                        expect(GPUbutt).toHaveAttr('aria-checked',addGPU);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'checkGPU.png');
-                    })
-            
-                    it('Should select GPU model in case GPU is selected',async ()=>{
-                        if(addGPU == 'true'){
-                            const gpuModel = await pricingInstanceForm.instanceForm('gpumodel');
-                            await gpuModel.scrollIntoView({ block: 'center', inline: 'center' })
-                            await gpuModel.click();
-            
-                            await pricingInstanceForm.waitForList('gpumodel',7);
-                            const gpuModelList = await pricingInstanceForm.gpumodelSelectionList(gpuModelValue);
+                            const operationSystemSelection = await pricingInstanceForm.operatingSystemList(operatingSystemValue);
+                    
+                            await operationSystemSelection.click();
+                    
+                            await pricingInstanceForm.waitForListVanish('os',7);
+                
+                            const operatingSystemText = await pricingInstanceForm.instanceFormText('software');
+    
+                            await expect(operatingSystemText).toHaveText(osSelector[operatingSystemValue]);
+                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'operatingSystem.png');
+                        })
+                    
+                        it('Should select the provisioning model', async()=>{
+                            const proivisionModel = await pricingInstanceForm.provisionModel(provisionModelSelection);
+                            await proivisionModel.scrollIntoView({ block: 'center', inline: 'center' })
+    
+                            const provisionInput = await pricingInstanceForm.provisionModelInput(provisionModelSelection);
+                            await proivisionModel.click();
+                    
+                            await expect(provisionInput).toHaveAttr('checked','true');
+                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'provisionModel.png');
+                        })
+                    
+                        it('Should select the machine family', async()=>{
+                            const machineFamily = pricingInstanceForm.instanceForm('machinefamily');
+                            await machineFamily.scrollIntoView({ block: 'center', inline: 'center' })
+                            await machineFamily.click();
+                    
+                            await pricingInstanceForm.waitForList('machinefamily',7);
                             
-                            await gpuModelList.click();
-            
-                            await pricingInstanceForm.waitForListVanish('gpumodel',7);
-                            const gpuModelText = await pricingInstanceForm.instanceFormText('gpumodel');
-                            
-                            expect(gpuModelText).toHaveText(gpuModelSelector[gpuModelValue]);
-            
-                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'gpuModelSelection.png');
-                        }
-                    })
-            
-                    it('Should select number of GPU in case GPU is selected',async ()=>{
-                        if(addGPU == 'true'){
-                            const GPUNumber = await pricingInstanceForm.instanceForm('numbergpu');
-                            await GPUNumber.click();
-            
-                            await pricingInstanceForm.waitForList('numbergpu',7);
-                            const gpuNumberList = await pricingInstanceForm.numberGpuSelectionList(gpuNumberValue);
-                            await gpuNumberList.click();
-            
-                            await pricingInstanceForm.waitForListVanish('numbergpu',7);
-            
-                            const numberGPUText = await pricingInstanceForm.instanceFormText('numbergpu');
-
-                            expect(numberGPUText).toHaveText(gpuNumberselector[gpuNumberValue]);
-            
-                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectNumberGPU.png');
-                        }
-                    })
-            
-                    it('Should select the local ssd',async()=>{
-                        const localSSD = await pricingInstanceForm.instanceForm('localssd');
-                        await localSSD.scrollIntoView({ block: 'center', inline: 'center' })
-                        await localSSD.click();
+                            const machineSystemList = pricingInstanceForm.machineFamilyList(machineFamilyValue);
+                            await machineSystemList.click();
                     
-                        await pricingInstanceForm.waitForList('localssd',7);
+                            await pricingInstanceForm.waitForListVanish('machinefamily',7);
+    
+                            const machineFamilyText = await pricingInstanceForm.instanceFormText('machinefamily');
+                
+                            await expect(machineFamilyText).toHaveText(machineTypeSelector[machineFamilyValue]);
+                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'machineFamily.png');
+                        })
+                    
+                        it('Should select the machine series',async()=>{
+                            const seriesMachine = await pricingInstanceForm.instanceForm('machineseries');
+                            await seriesMachine.scrollIntoView({ block: 'center', inline: 'center' })
+                            await seriesMachine.click();
                         
-                        const localSSDList = await pricingInstanceForm.localSSDSelectionList(localSSDValue);
-                        await (await localSSDList).scrollIntoView({ block: 'center', inline: 'center' })
-                        await localSSDList.click();
-            
-                        await pricingInstanceForm.waitForListVanish('localssd',7);
+                            await pricingInstanceForm.waitForList('serieslist',7);
+                            
                 
-                        const localSSDText = await pricingInstanceForm.instanceFormText('localssd');
-
-                        expect(localSSDText).toHaveText(localSSDSelector[localSSDValue]);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'localSSDSelector.png');
-                    })
-            
-                    it('Should select the region',async()=>{
-                        const region = pricingInstanceForm.instanceForm('region');
-                        await region.scrollIntoView({ block: 'center', inline: 'center' })
-                        await region.click();
+                            const machineSeriesList = await pricingInstanceForm.seriesMachineList(seriesMachineValue);
+                            await machineSeriesList.click();
+                
+                            await pricingInstanceForm.waitForListVanish('serieslist',7);
+    
+                            const seriesMachineText = await pricingInstanceForm.instanceFormText('machineseries');
+                            
+                            await expect(seriesMachineText).toHaveText(seriesSelector[seriesMachineValue]);
+                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'machineSeries.png');
+                        })
+                
+                        it('Should select the machine type',async()=>{
+                            const typeMachine = await pricingInstanceForm.instanceForm('machinetype');
+                            await typeMachine.scrollIntoView({ block: 'center', inline: 'center' })
+                            await typeMachine.click();
+                        
+                            await pricingInstanceForm.waitForList('machinetypelist',7);
+                
+                            const machineTypeList = pricingInstanceForm.machineTypeList(machineTypeValue);
+                            await machineTypeList.click();
+                
+                            await pricingInstanceForm.waitForListVanish('machinetypelist',7);
+                            const typeMachineText = await pricingInstanceForm.instanceFormText('machinetype');
                     
-                        await pricingInstanceForm.waitForList('region',7);
-            
-                        const regionList = pricingInstanceForm.regionSelectionList(regionValue);
-                        await regionList.click();
-            
-                        await pricingInstanceForm.waitForListVanish('region',7);
-
-                        const regionText = await pricingInstanceForm.instanceFormText('region');
+                            await expect(typeMachineText).toHaveText(typeMachineSelector[machineTypeValue]);
+                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'machineType.png');
+                        })
                 
-                        expect(regionText).toHaveText(regionSelector[regionValue]);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'regionSelector.png');
-                    })
-            
-                    it('Should select commited use discount options', async()=>{
-                        const commitedOptions = pricingInstanceForm.commitedOptions(commitedSelection);
-                        const commitedInput = pricingInstanceForm.commitedOptionsInput(commitedSelection);
-                        await commitedOptions.scrollIntoView({ block: 'center', inline: 'center' })
-                        await commitedOptions.click();
+                        it('Should select the addGPU button if needed',async ()=>{
+                            
+                            const addGPUButt = await pricingInstanceForm.instanceForm('addgpu');
+                            const valueGPU = await addGPUButt.getAttribute('aria-checked');
+                            await addGPUButt.scrollIntoView({ block: 'center', inline: 'center' })
                 
-                        expect(commitedInput).toHaveAttr('checked','');
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectCommitedOptions.png');
-                    })
-            })
+                            if(valueGPU != addGPU){
+                                await addGPUButt.click();
+                                await saveScreenShot(`${screenShotsFilePath}/${name}/`,'GpuChange.png');
+                            }
+                            const GPUbutt = pricingInstanceForm.instanceForm('addgpu');
+                            await expect(GPUbutt).toHaveAttr('aria-checked',addGPU);
+                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'checkGPU.png');
+                        })
+                
+                        it('Should select GPU model in case GPU is selected',async ()=>{
+                            if(addGPU == 'true'){
+                                const gpuModel = await pricingInstanceForm.instanceForm('gpumodel');
+                                await gpuModel.scrollIntoView({ block: 'center', inline: 'center' })
+                                await gpuModel.click();
+                
+                                await pricingInstanceForm.waitForList('gpumodel',7);
+                                const gpuModelList = await pricingInstanceForm.gpumodelSelectionList(gpuModelValue);
+                                
+                                await gpuModelList.click();
+                
+                                await pricingInstanceForm.waitForListVanish('gpumodel',7);
+                                const gpuModelText = await pricingInstanceForm.instanceFormText('gpumodel');
+                                
+                                await expect(gpuModelText).toHaveText(gpuModelSelector[gpuModelValue]);
+                
+                                await saveScreenShot(`${screenShotsFilePath}/${name}/`,'gpuModelSelection.png');
+                            }
+                        })
+                
+                        it('Should select number of GPU in case GPU is selected',async ()=>{
+                            if(addGPU == 'true'){
+                                const GPUNumber = await pricingInstanceForm.instanceForm('numbergpu');
+                                await GPUNumber.click();
+                
+                                await pricingInstanceForm.waitForList('numbergpu',7);
+                                const gpuNumberList = await pricingInstanceForm.numberGpuSelectionList(gpuNumberValue);
+                                await gpuNumberList.click();
+                
+                                await pricingInstanceForm.waitForListVanish('numbergpu',7);
+                
+                                const numberGPUText = await pricingInstanceForm.instanceFormText('numbergpu');
+    
+                                await expect(numberGPUText).toHaveText(gpuNumberselector[gpuNumberValue]);
+                
+                                await saveScreenShot(`${screenShotsFilePath}/${name}/`,'numberGPU.png');
+                            }
+                        })
+                
+                        it('Should select the local ssd',async()=>{
+                            const localSSD = await pricingInstanceForm.instanceForm('localssd');
+                            await localSSD.scrollIntoView({ block: 'center', inline: 'center' })
+                            await localSSD.click();
+                        
+                            await pricingInstanceForm.waitForList('localssd',7);
+                            
+                            const localSSDList = await pricingInstanceForm.localSSDSelectionList(localSSDValue);
+                            await (await localSSDList).scrollIntoView({ block: 'center', inline: 'center' })
+                            await localSSDList.click();
+                
+                            await pricingInstanceForm.waitForListVanish('localssd',7);
+                    
+                            const localSSDText = await pricingInstanceForm.instanceFormText('localssd');
+    
+                            await expect(localSSDText).toHaveText(localSSDSelector[localSSDValue]);
+                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'localSSDSelector.png');
+                        })
+                
+                        it('Should select the region',async()=>{
+                            const region = pricingInstanceForm.instanceForm('region');
+                            await region.scrollIntoView({ block: 'center', inline: 'center' })
+                            await region.click();
+                        
+                            await pricingInstanceForm.waitForList('region',7);
+                
+                            const regionList = pricingInstanceForm.regionSelectionList(regionValue);
+                            await regionList.click();
+                
+                            await pricingInstanceForm.waitForListVanish('region',7);
+    
+                            const regionText = await pricingInstanceForm.instanceFormText('region');
+                    
+                            await expect(regionText).toHaveText(regionSelector[regionValue]);
+                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'regionSelector.png');
+                        })
+                
+                        it('Should select commited use discount options', async()=>{
+                            const commitedOptions = pricingInstanceForm.commitedOptions(commitedSelection);
+                            const commitedInput = pricingInstanceForm.commitedOptionsInput(commitedSelection);
+                            await commitedOptions.scrollIntoView({ block: 'center', inline: 'center' })
+                            await commitedOptions.click();
+                    
+                            await expect(commitedInput).toHaveAttr('checked','true');
+                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'commitedOptions.png');
+                        })
+                 })
         })
     })
 
@@ -395,7 +406,7 @@ describe('Estimation of an order of compute', () => {
         it('Should compare the total estimated cost on new page and the old page',async()=>{
             const totalEstimated = await estimatePreviewPage.estimatedCost;
 
-            expect(totalEstimated).toHaveText(totalCost);
+            await expect(totalEstimated).toHaveText(totalCost);
             await saveScreenShot(`${screenShotsFilePath}/`,'checkingValues.png');
         })
 

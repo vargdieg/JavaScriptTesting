@@ -19,9 +19,9 @@ let estimatePreviewPage = '';
 let addItemGroupForm = '';
 let costDetailComponent = '';
 
-const googleMainPageTitle = 'Servicios de cloud computing | Google Cloud';
+const googleMainPageTitle = 'Servicios de computación en la nube | Google Cloud';
 const searchInputText = 'Google Cloud Platform Pricing Calculator';
-const searchTitleText = `Resultados de la búsqueda de "${searchInputText}"  |  Google Cloud`;
+const searchTitleText = `Resultados de la búsqueda para "${searchInputText}"  |  Google Cloud`;
 const searchParams = 'Google Cloud Pricing Calculator';
 
 const googlePricingTitle = 'Calculadora de precios de Google Cloud';
@@ -43,8 +43,7 @@ describe('Estimation of an order of compute', () => {
 
     describe('Navigate to the google cloud page',()=>{
         it('Should check google main page title',async()=>{
-            const title = await googleMainPage.title;
-            expect(title).toHaveText(googleMainPageTitle);
+            await expect(browser).toHaveTitle(expect.stringContaining(googleMainPageTitle));
             
             await saveScreenShot(`${screenShotsFilePath}/`,'openGoogleMainPage.png');
         })
@@ -56,7 +55,7 @@ describe('Estimation of an order of compute', () => {
             const findElementText = await googleMainPage.FindInputText;
     
             await findElementText.setValue(searchInputText);
-            expect(findElementText).toHaveText(searchInputText);
+            await expect(findElementText).toHaveValue(searchInputText);
     
             
             await saveScreenShot(`${screenShotsFilePath}/`,'tryingToSearch.png');
@@ -64,8 +63,7 @@ describe('Estimation of an order of compute', () => {
         })
     
         it('Should check the title of the search page',async()=>{
-            const title = await searchPageResult.title;
-            expect(title).toHaveText(searchTitleText);
+            await expect(browser).toHaveTitle(expect.stringContaining(searchTitleText));
             await saveScreenShot(`${screenShotsFilePath}/`,'searchPage.png');
         })
     
@@ -75,8 +73,7 @@ describe('Estimation of an order of compute', () => {
     
             await searchPageResult.waitPage(7);
             
-            const title = await pricingCloudPage.title;
-            expect(title).toHaveText(googlePricingTitle);
+            await expect(browser).toHaveTitle(expect.stringContaining(googlePricingTitle));
             await saveScreenShot(`${screenShotsFilePath}/`,'pricingCalculatorPage.png');
             await pricingCloudPage.maximiseWindown();
         })
@@ -130,7 +127,7 @@ describe('Estimation of an order of compute', () => {
         it('Should compare the total estimated cost on new page and the old page',async()=>{
             const totalEstimated = await estimatePreviewPage.estimatedCost;
 
-            expect(totalEstimated).toHaveText(totalCost);
+            await expect(totalEstimated).toHaveText(totalCost);
             await saveScreenShot(`${screenShotsFilePath}/`,'checkingValues.png');
         })
 
