@@ -23,9 +23,9 @@ let addItemGroupForm = '';
 let pricingInstanceForm = '';
 let costDetailComponent = '';
 
-const googleMainPageTitle = 'Servicios de cloud computing | Google Cloud';
+const googleMainPageTitle = 'Servicios de computación en la nube | Google Cloud';
 const searchInputText = 'Google Cloud Platform Pricing Calculator';
-const searchTitleText = `Resultados de la búsqueda de "${searchInputText}"  |  Google Cloud`;
+const searchTitleText = `Resultados de la búsqueda para "${searchInputText}"  |  Google Cloud`;
 const searchParams = 'Google Cloud Pricing Calculator';
 
 const googlePricingTitle = 'Calculadora de precios de Google Cloud';
@@ -65,8 +65,8 @@ const typeMachineSelector = {
 const gpuModelSelector = {
     nvidiateslap100: 'NVIDIA Tesla P100',
     nvidiateslap4: 'NVIDIA Tesla P4',
-    nvidiateslav100: 'NVIDIA Tesla V100',
-    nvidiateslat4: 'NVIDIA Tesla T4'
+    nvidiateslav100: 'NVIDIA V100',
+    nvidiateslat4: 'NVIDIA T4'
 }
 
 const gpuNumberselector = {
@@ -85,9 +85,9 @@ const localSSDSelector = {
 }
 
 const regionSelector = {
-    uscentral1: 'us-central1',
-    uswest1: 'us-west1',
-    uswest2: 'us-west2'
+    uscentral1: 'Iowa (us-central1)',
+    uswest1: 'Oregon (us-west1)',
+    uswest2: 'Los Angeles (us-west2)'
 }
 
 describe('Estimation of an order of compute', () => {
@@ -105,8 +105,7 @@ describe('Estimation of an order of compute', () => {
 
     describe('Navigate to the google cloud page',()=>{
         it('Should check google main page title',async()=>{
-            const title = await googleMainPage.title;
-            expect(title).toHaveText(googleMainPageTitle);
+            await expect(browser).toHaveTitle(expect.stringContaining(googleMainPageTitle));
             
             await saveScreenShot(`${screenShotsFilePath}/`,'openGoogleMainPage.png');
         })
@@ -116,9 +115,13 @@ describe('Estimation of an order of compute', () => {
             await findElement.click();
     
             const findElementText = await googleMainPage.FindInputText;
-    
+
             await findElementText.setValue(searchInputText);
-            expect(findElementText).toHaveText(searchInputText);
+
+            console.log('Elemento a encontrar');
+            console.log(await findElementText.getHTML());
+
+            await expect(findElementText).toHaveValue(searchInputText);
     
             
             await saveScreenShot(`${screenShotsFilePath}/`,'tryingToSearch.png');
@@ -126,8 +129,7 @@ describe('Estimation of an order of compute', () => {
         })
     
         it('Should check the title of the search page',async()=>{
-            const title = await searchPageResult.title;
-            expect(title).toHaveText(searchTitleText);
+            await expect(browser).toHaveTitle(expect.stringContaining(searchTitleText));
             await saveScreenShot(`${screenShotsFilePath}/`,'searchPage.png');
         })
     
@@ -137,16 +139,27 @@ describe('Estimation of an order of compute', () => {
     
             await searchPageResult.waitPage(7);
             
-            const title = await pricingCloudPage.title;
-            expect(title).toHaveText(googlePricingTitle);
+            await expect(browser).toHaveTitle(expect.stringContaining(googlePricingTitle));
             await saveScreenShot(`${screenShotsFilePath}/`,'pricingCalculatorPage.png');
             await pricingCloudPage.maximiseWindown();
         })
     })
 
-    describe('Add a compute elements',()=>{
-        testInstance.forEach(({name,numberOfInstances,operatingSystemValue,provisionModelSelection,machineFamilyValue,seriesMachineValue,machineTypeValue,addGPU,
-            gpuModelValue,gpuNumberValue,localSSDValue,regionValue,commitedSelection})=>{
+    describe('Add a compute element',()=>{
+        let name = testInstance.name;
+        let numberOfInstances = testInstance.numberOfInstances;
+        let operatingSystemValue = testInstance.operatingSystemValue;
+        let provisionModelSelection = testInstance.provisionModelSelection;
+        let machineFamilyValue = testInstance.machineFamilyValue;
+        let seriesMachineValue = testInstance.seriesMachineValue;
+        let machineTypeValue = testInstance.machineTypeValue;
+        let addGPU = testInstance.addGPU;
+        let gpuModelValue = testInstance.gpuModelValue;
+        let gpuNumberValue = testInstance.gpuNumberValue;
+        let localSSDValue = testInstance.localSSDValue;
+        let regionValue = testInstance.regionValue;
+        let commitedSelection = testInstance.commitedSelection;
+                
                 describe(`Adding element ${name}`,()=>{
 
                     it('Should click the add estimate button and show the menu',async()=>{
@@ -173,8 +186,8 @@ describe('Estimation of an order of compute', () => {
                         await numberInstances.scrollIntoView({ block: 'center', inline: 'center' })
                         await numberInstances.setValue(numberOfInstances);
                 
-                        expect(numberInstances).toHaveText(numberOfInstances);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectNumberInstances.png');
+                        await expect(numberInstances).toHaveValue(`${numberOfInstances}`);
+                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'numberOfInstances.png');
                     })
                 
                     it('Should select operating system',async()=>{
@@ -185,7 +198,7 @@ describe('Estimation of an order of compute', () => {
                 
                         await pricingInstanceForm.waitForList('os',7);
             
-                        const operationSystemSelection = pricingInstanceForm.operatingSystemList(operatingSystemValue);
+                        const operationSystemSelection = await pricingInstanceForm.operatingSystemList(operatingSystemValue);
                 
                         await operationSystemSelection.click();
                 
@@ -193,8 +206,8 @@ describe('Estimation of an order of compute', () => {
             
                         const operatingSystemText = await pricingInstanceForm.instanceFormText('software');
 
-                        expect(operatingSystemText).toHaveText(osSelector[operatingSystemValue]);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectOperatingSystem.png');
+                        await expect(operatingSystemText).toHaveText(osSelector[operatingSystemValue]);
+                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'operatingSystem.png');
                     })
                 
                     it('Should select the provisioning model', async()=>{
@@ -204,8 +217,8 @@ describe('Estimation of an order of compute', () => {
                         const provisionInput = await pricingInstanceForm.provisionModelInput(provisionModelSelection);
                         await proivisionModel.click();
                 
-                        expect(provisionInput).toHaveAttr('checked','');
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectProvisionModel.png');
+                        await expect(provisionInput).toHaveAttr('checked','true');
+                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'provisionModel.png');
                     })
                 
                     it('Should select the machine family', async()=>{
@@ -220,10 +233,10 @@ describe('Estimation of an order of compute', () => {
                 
                         await pricingInstanceForm.waitForListVanish('machinefamily',7);
 
-                        const machineFamilyText = await pricingInstanceForm.instanceFormText('software');
+                        const machineFamilyText = await pricingInstanceForm.instanceFormText('machinefamily');
             
-                        expect(machineFamilyText).toHaveText(machineTypeSelector[machineFamilyValue]);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectMachineType.png');
+                        await expect(machineFamilyText).toHaveText(machineTypeSelector[machineFamilyValue]);
+                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'machineFamily.png');
                     })
                 
                     it('Should select the machine series',async()=>{
@@ -241,8 +254,8 @@ describe('Estimation of an order of compute', () => {
 
                         const seriesMachineText = await pricingInstanceForm.instanceFormText('machineseries');
                         
-                        expect(seriesMachineText).toHaveText(seriesSelector[seriesMachineValue]);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'seriesSelector.png');
+                        await expect(seriesMachineText).toHaveText(seriesSelector[seriesMachineValue]);
+                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'machineSeries.png');
                     })
             
                     it('Should select the machine type',async()=>{
@@ -256,10 +269,10 @@ describe('Estimation of an order of compute', () => {
                         await machineTypeList.click();
             
                         await pricingInstanceForm.waitForListVanish('machinetypelist',7);
-                        const typeMachineText = await pricingInstanceForm.instanceFormText('machineseries');
+                        const typeMachineText = await pricingInstanceForm.instanceFormText('machinetype');
                 
-                        expect(typeMachineText).toHaveText(typeMachineSelector[machineTypeValue]);
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'typeMachineSelector.png');
+                        await expect(typeMachineText).toHaveText(typeMachineSelector[machineTypeValue]);
+                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'machineType.png');
                     })
             
                     it('Should select the addGPU button if needed',async ()=>{
@@ -273,7 +286,7 @@ describe('Estimation of an order of compute', () => {
                             await saveScreenShot(`${screenShotsFilePath}/${name}/`,'GpuChange.png');
                         }
                         const GPUbutt = pricingInstanceForm.instanceForm('addgpu');
-                        expect(GPUbutt).toHaveAttr('aria-checked',addGPU);
+                        await expect(GPUbutt).toHaveAttr('aria-checked',addGPU);
                         await saveScreenShot(`${screenShotsFilePath}/${name}/`,'checkGPU.png');
                     })
             
@@ -291,7 +304,7 @@ describe('Estimation of an order of compute', () => {
                             await pricingInstanceForm.waitForListVanish('gpumodel',7);
                             const gpuModelText = await pricingInstanceForm.instanceFormText('gpumodel');
                             
-                            expect(gpuModelText).toHaveText(gpuModelSelector[gpuModelValue]);
+                            await expect(gpuModelText).toHaveText(gpuModelSelector[gpuModelValue]);
             
                             await saveScreenShot(`${screenShotsFilePath}/${name}/`,'gpuModelSelection.png');
                         }
@@ -310,9 +323,9 @@ describe('Estimation of an order of compute', () => {
             
                             const numberGPUText = await pricingInstanceForm.instanceFormText('numbergpu');
 
-                            expect(numberGPUText).toHaveText(gpuNumberselector[gpuNumberValue]);
+                            await expect(numberGPUText).toHaveText(gpuNumberselector[gpuNumberValue]);
             
-                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectNumberGPU.png');
+                            await saveScreenShot(`${screenShotsFilePath}/${name}/`,'numberGPU.png');
                         }
                     })
             
@@ -331,7 +344,7 @@ describe('Estimation of an order of compute', () => {
                 
                         const localSSDText = await pricingInstanceForm.instanceFormText('localssd');
 
-                        expect(localSSDText).toHaveText(localSSDSelector[localSSDValue]);
+                        await expect(localSSDText).toHaveText(localSSDSelector[localSSDValue]);
                         await saveScreenShot(`${screenShotsFilePath}/${name}/`,'localSSDSelector.png');
                     })
             
@@ -349,7 +362,7 @@ describe('Estimation of an order of compute', () => {
 
                         const regionText = await pricingInstanceForm.instanceFormText('region');
                 
-                        expect(regionText).toHaveText(regionSelector[regionValue]);
+                        await expect(regionText).toHaveText(regionSelector[regionValue]);
                         await saveScreenShot(`${screenShotsFilePath}/${name}/`,'regionSelector.png');
                     })
             
@@ -359,11 +372,10 @@ describe('Estimation of an order of compute', () => {
                         await commitedOptions.scrollIntoView({ block: 'center', inline: 'center' })
                         await commitedOptions.click();
                 
-                        expect(commitedInput).toHaveAttr('checked','');
-                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'SelectCommitedOptions.png');
+                        await expect(commitedInput).toHaveAttr('checked','true');
+                        await saveScreenShot(`${screenShotsFilePath}/${name}/`,'commitedOptions.png');
                     })
-            })
-        })
+             })
     })
 
 
@@ -394,7 +406,7 @@ describe('Estimation of an order of compute', () => {
         it('Should compare the total estimated cost on new page and the old page',async()=>{
             const totalEstimated = await estimatePreviewPage.estimatedCost;
 
-            expect(totalEstimated).toHaveText(totalCost);
+            await expect(totalEstimated).toHaveText(totalCost);
             await saveScreenShot(`${screenShotsFilePath}/`,'checkingValues.png');
         })
 
