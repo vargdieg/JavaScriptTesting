@@ -112,6 +112,9 @@ describe('Estimation of an order of compute', () => {
         })
     
         it('Should click in the search bar and fill with the desired input',async()=>{
+            await googleMainPage.waitPage(7);
+            await googleMainPage.elementExist('inputbttn');
+            
             const findElement = await googleMainPage.FindElement;
             await findElement.click();
     
@@ -119,7 +122,6 @@ describe('Estimation of an order of compute', () => {
             await findElementText.setValue(searchInputText);
 
             await expect(findElementText).toHaveValue(searchInputText);
-    
             
             await saveScreenShot(`${screenShotsFilePath}/`,'tryingToSearch.png');
             await googleMainPage.pressEnter();
@@ -131,6 +133,8 @@ describe('Estimation of an order of compute', () => {
         })
     
         it('Should select the pricing page and redirecto to pricing page',async()=>{
+            await searchPageResult.waitPage(7);
+            
             const desiredPage = await searchPageResult.FindPage(searchParams);
             await desiredPage.click();
     

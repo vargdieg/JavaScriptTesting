@@ -4,7 +4,7 @@ class mainPage{
     }
 
     get title(){
-        return $('//title');
+        return $('//head//title');
     }
 
     get header(){
@@ -12,7 +12,7 @@ class mainPage{
     }
 
     get FindElement(){
-        return this.header.$('//div[contains(@class,"ND91id ") and contains(@jsname,"MVsrn")]');
+        return $('//div[contains(@class,"ND91id ") and contains(@jsname,"MVsrn")]');
     }
 
     get FindInputText(){
@@ -21,6 +21,23 @@ class mainPage{
 
     pressEnter(){
         return browser.keys('\uE007')
+    }
+
+    waitPage(timeToWait){
+        return browser.waitUntil(
+            () => browser.execute(() => document.readyState === 'complete'),
+            {
+              timeout: timeToWait * 1000,
+              timeoutMsg: 'Page did not load :('
+            }
+          );
+    }
+
+    elementExist(param,time){
+        const selector = {
+            inputbttn: this.FindElement.waitForExist({ timeout : time*1000, reverse: false, timeoutMsg: 'Input button did not show up :(', interval: 30 })
+        }
+        return selector[param];
     }
 }
 
