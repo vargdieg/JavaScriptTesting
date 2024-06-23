@@ -1,10 +1,12 @@
+const instanceForm = require('../Components/pricingpageComponents/instanceForm.js');
+const browseutils = require('../../utils/browserUtils.js');
+
 class googlePricingPage {
+
+    instance = new instanceForm();
+
     open(){
         return browser.url('https://cloud.google.com/products/calculator?hl=es-419')
-    }
-
-    get title(){
-        return $('//title');
     }
 
     get addEstimate(){
@@ -15,18 +17,17 @@ class googlePricingPage {
         return $('//div[contains(@class,"bwApif-cnG4Wd") and contains(@jsname,"rZHESd")]')
     }
 
-    waitForPopup(time){
-        return this.popup.waitForDisplayed({ timeout: time*1000, reverse: false, timeoutMsg: 'Pop up did not show', interval: 10 })
-    }
-
-    waitForClosingPopup(time){
-        return this.popup.waitForDisplayed({ timeout: time*1000, reverse: true, timeoutMsg: 'Pop up did not vanish', interval: 10 })
-    }
-
     async maximiseWindown(){
         await browser.maximizeWindow();
     }
-    
+
+    async addProductClick(){
+        const addEstimateBttn = await this.addEstimate;
+        await addEstimateBttn.scrollIntoView({ block: 'center', inline: 'center' })
+        await addEstimateBttn.click();
+        await browseutils.waitForDisplay(this.popup,7,'The product pop up did not show');
+    }
+
 }
 
 module.exports = googlePricingPage;

@@ -4,22 +4,13 @@ class searchPage {
         return $('//div[contains(@class,"gsc-expansionArea")]')
     }
 
-    get title(){
-        return $('//title');
-    }
-
     FindPage(pageTitle){
         return this.rootEl.$(`//b[contains(text(),"${pageTitle}")]`);
     }
 
-    waitPage(timeToWait){
-        return browser.waitUntil(
-            () => browser.execute(() => document.readyState === 'complete'),
-            {
-              timeout: timeToWait * 1000,
-              timeoutMsg: 'Page did not load :('
-            }
-          );
+    async navigateToPage(pageTitle){
+        const desiredPage = await this.FindPage(pageTitle);
+        await desiredPage.click();
     }
 }
 module.exports = searchPage

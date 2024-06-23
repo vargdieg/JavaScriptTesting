@@ -30,7 +30,7 @@ exports.config = {
             '../specs/criticalRoute.js'
         ],
         testAddInstanceRoute:[
-            '../specs/addComputeTesting.js'
+            '../specs/addCompute.js'
         ]
     },
     // Patterns to exclude.
@@ -255,7 +255,7 @@ exports.config = {
         if (error) {
             console.log(`Screenshot for the failed test ${test.title} is saved`);
             const filename = test.title + '.png';
-            const dirPath = './screenshots/';
+            const dirPath = './screenshots/errors';
         
             if (!existsSync(dirPath)) {
               mkdirSync(dirPath, {

@@ -9,9 +9,11 @@ const estimatePreview = require('../PageObject/pages/googleEstimatePreviewPage.j
 const screenShots = require('../utils/saveScreenshots.js');
 const browseutils = require('../utils/browserUtils.js');
 
-const testInstance = require('../datatest/dataTest.js');
+let environmet = process.env.NODE_ENV;
+
+const testInstance = require(`../datatest/${environmet}.js`);
 const validationValues = require('../validation/validateValues.js');
-const screenShotsFilePath = './screenshots';
+const screenShotsFilePath = `./screenshots/${environmet}`;
 
 let googleMainPage = '';
 let searchPageResult = '';

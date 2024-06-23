@@ -1,3 +1,5 @@
+const browseutils = require('../../utils/browserUtils.js');
+
 class costDetails {
     get rootEl(){
         return $('//div[contains(@class,"uMSQA") and contains(@jsname,"Olpjye")]')
@@ -15,8 +17,26 @@ class costDetails {
         return this.rootEl.$('//a[contains(text(),"Open estimate summary")]');
     }
 
-    waitForDetails(time){
-        return this.rootEl.waitForDisplayed({ timeout: time*1000, reverse: false, timeoutMsg: `not showing up the costDetails`, interval: 500 })
+    get popup(){
+        return $('//div[contains(@class,"bwApif-cnG4Wd") and contains(@jsname,"rZHESd")]')
+    }
+
+    async totalCost(){
+        const totalCostElement = await this.estimateValue;
+        return totalCostElement.getHTML(false);
+    }
+
+    async shareEstimatedCost(){
+        const shareButton = await this.shareButt;
+        await shareButton.scrollIntoView({ block: 'center', inline: 'center' })
+        shareButton.click();
+        await browseutils.waitForDisplay(this.popup,15,"The share Estimated pop up did not appear");
+    }
+
+    async clickSummaryBtton(){
+        const summaryBttn = await this.summaryBttn;
+        summaryBttn.click();
+        await browseutils.waitForDisplay(this.rootEl,7,"not showing up the costDetails");
     }
 }
 

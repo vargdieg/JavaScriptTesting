@@ -3,41 +3,32 @@ class mainPage{
         return browser.url('https://cloud.google.com/?hl=es-419');
     }
 
-    get title(){
-        return $('//head//title');
-    }
-
-    get header(){
-        return $('//div[contains(@class,"ZUAiPc") and contains(@jsname,"RShKxc")]');
-    }
-
-    get FindElement(){
+    get inputSearchContainer(){
         return $('//div[contains(@class,"ND91id ") and contains(@jsname,"MVsrn")]');
     }
 
-    get FindInputText(){
-        return this.FindElement.$('//input[contains(@class,"mb2a7b") and contains(@jsname,"jjXxte")]');
+    get InputSearchText(){
+        return this.inputSearchContainer.$('//input[contains(@class,"mb2a7b") and contains(@jsname,"jjXxte")]');
     }
 
     pressEnter(){
         return browser.keys('\uE007')
     }
 
-    waitPage(timeToWait){
-        return browser.waitUntil(
-            () => browser.execute(() => document.readyState === 'complete'),
-            {
-              timeout: timeToWait * 1000,
-              timeoutMsg: 'Page did not load :('
-            }
-          );
+    inputButtonExists(time){
+        return this.inputSearchContainer.waitForExist({ timeout : time*1000, reverse: false, timeoutMsg: 'Input button did not show up :(', interval: 30 });
     }
 
-    elementExist(param,time){
-        const selector = {
-            inputbttn: this.FindElement.waitForExist({ timeout : time*1000, reverse: false, timeoutMsg: 'Input button did not show up :(', interval: 30 })
-        }
-        return selector[param];
+    async clickInputSearchButton(){
+        await this.inputButtonExists(5);
+        const inputContainer = await this.inputSearchContainer;
+        await inputContainer.click();
+    }
+
+    async fillInputText(stringToSearch){
+        const inputText = await this.InputSearchText;
+        await inputText.setValue(stringToSearch);
+        await expect(inputText).toHaveValue(stringToSearch);
     }
 }
 
